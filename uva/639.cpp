@@ -11,19 +11,11 @@ int n,mx=-1;
 vector<string>v;
 int check(int i,int j)
 {
-    for(int k=j; k<n && v[i][k]!='X'; k++)
-    {
-        if(v[i][k]=='o')
-            return 0;
-    }
+    if(v[i][j]=='X')
+    return 0;
     for(int k=j; k>=0 && v[i][k]!='X'; k--)
     {
         if(v[i][k]=='o')
-            return 0;
-    }
-    for(int k=i; k<n && v[k][j]!='X'; k++)
-    {
-        if(v[k][j]=='o')
             return 0;
     }
     for(int k=i; k>=0 && v[k][j]!='X'; k--)
@@ -34,19 +26,10 @@ int check(int i,int j)
     return 1;
 
 }
-void btrack(int i,int j)
+void btrack(int i,int j,int ct)
 {
     if(i==n-1 && j==n)
     {
-        int ct=0;
-        for(int k=0; k<n; k++)
-        {
-            for(int l=0; l<n; l++)
-            {
-                if(v[k][l]=='o')
-                    ct++;
-            }
-        }
         mx=max(ct,mx);
         return;
     }
@@ -55,24 +38,18 @@ void btrack(int i,int j)
         i++;
         j=0;
     }
-    if(v[i][j]=='X')
-        btrack(i,j+1);
-    else if(check(i,j)==1)
+    if(check(i,j)==1)
     {
         v[i][j]='o';
-        btrack(i,j+1);
+        btrack(i,j+1,ct+1);
         v[i][j]='.';
-        btrack(i,j+1);
     }
-    else
-    {
-        btrack(i,j+1);
-    }
+    btrack(i,j+1,ct);
 }
 int main()
 {
     //freopen("input.txt", "r", stdin);
-   // freopen("output.txt", "w", stdout);
+    // freopen("output.txt", "w", stdout);
     while(scanf("%d",&n))
     {
         if(n==0)
@@ -85,7 +62,7 @@ int main()
             v.push_back(s);
         }//
         mx=-1;
-        btrack(0,0);
+        btrack(0,0,0);
         cout<<mx<<endl;
     }
 }
