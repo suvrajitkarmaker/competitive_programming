@@ -1,71 +1,59 @@
 #include <bits/stdc++.h>
 using namespace std;
-bool s[1000000];
-long long int a[1000000];
-void siv()
+typedef long long int ll;
+
+#define READ(f) freopen(f, "r", stdin)
+#define WRITE(f) freopen(f, "w", stdout)
+#define gcd3(x,y,z)                __gcd(__gcd(x,y),z)
+#define INF                     LLONG_MAX
+#define inf                     LONG_MAX
+#define PI                      (2.0*acos(0.0))
+#define Log(b,x)                (log(x)/log(b))
+#define all(x)                  (x).begin(), (x).end()
+#define Unique(x)               sort(all(x)); x.erase(unique(all(x)), x.end());
+#define inttostring(x)          to_string(x)
+#define stringtoint(x)          stoll(x)
+#define valid(nx,ny,row,col)    nx>=0 && nx<row && ny>=0 && ny<col
+#define CLR(x,y)                memset(x,y,sizeof(x));
+#define max3(x,y,z)             max(z,max(x,y));
+#define min3(x,y,z)             min(z,min(x,y));
+#define MP(x, y) make_pair(x, y)
+#define SZ(c) (int)c.size()
+#define PB(x) push_back(x)
+#define ff first
+#define ss second
+#define pii pair< int, int >
+#define psi pair< string, int >
+#define MAX 10010
+#define eps 1e-15
+#define mod 1000000009
+#define PII pair<int, int>
+priority_queue<PII, vector<PII>, greater<PII> > q;
+
+ll csod(ll n)
 {
-    int n=1000000;
-    for(int i=4; i<=n; i+=2)
+    ll sum=0,j;
+    for(int i=2; i*i<=n; i++)
     {
-        s[i]=1;
+        j=n/i;
+
+        sum+=((i+j)*(j-i+1))/2;
+        sum+=i*(j-i);
+
     }
-    for(int i=3; i*i<=n; i+=2)
-    {
-        if(s[i]==0)
-        {
-            for(int j=i*i; j<=n; j+=i)
-                s[j]=1;
-        }
-    }
-    s[1]=1;
-    for(int i=2, j=0; i<=n; i++)
-    {
-        if(s[i]==0)
-        {
-            a[j++]=i;
-        }
-    }
-}
-int power_sum(int n,int p)
-{
-    int sum=0;
-    for(int i=0; i<=p; i++)
-        sum+=pow(n,i);
     return sum;
-}
-int sod(int n)
-{
-    int m=n,sum=1;
-    for(int i=0; a[i]*a[i]<=n; i++)
-    {
-        if(n%a[i]==0)
-        {
-            int c=0;
-            while(n%a[i]==0)
-            {
-                c++;
 
-                n/=a[i];
-            }
-            sum*=power_sum(a[i],c);
-
-        }
-    }
-    if(n>1)
-    {
-        sum*=power_sum(n,1);
-    }
-    return sum-(1+m);
 }
 int main()
 {
-    siv();
-    //cout<<sod(2)<<endl;
-    int n,sum=0;
-    for(int i=2;i<=100;i++)
+     //READ("input.txt");
+    // WRITE("output.txt");
+    ll n;
+    for(int t=1; scanf("%lld",&n)!=EOF && n!=0; t++)
     {
-        sum+=sod(i);
-        cout<<sum<<endl;
-     }
-     cout<<"dsa";
+
+
+        printf("Case %d: %lld\n",t,csod(n));
+
+    }
 }
