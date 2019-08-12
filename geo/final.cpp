@@ -123,7 +123,10 @@ struct line
     {
         D a1=(v.b-v.a).det(a-v.a);
         D a2=(v.b-v.a).det(b-v.b);
-
+        if(compare(a1)==compare(0) && compare(a2)==compare(0))//if a1=0 & a2=0 then they are same line
+            return point(3000,3000); //it depends of problem constant
+        if(compare(a1)==compare(a2)) //if a1==a2 same then they are not intersect
+            return point(2000,2000); //it depends of problem constant
         return point((a.x*a2 - b.x*a1)/(a2-a1), (a.y*a2 - b.y*a1)/(a2-a1));
     }
     int isPointOnSeg(point p)
@@ -279,23 +282,24 @@ int main()
 {
     int te;
     cin>>te;
+    printf("INTERSECTING LINES OUTPUT\n");
     while(te--)
     {
-        point a,b,c,d;
-        a.scan();
-        b.scan();
-        c.scan();
-        d.scan();
-        polygon poly;
-        poly.n=4;
-        poly.p[0]=point(c.x,d.y);
-        poly.p[1]=d;
-        poly.p[2]=point(d.x,c.y);
-        poly.p[3]=c;
-        int res=poly.doesLineIntersectPolygon(line(a,b));
-        if(res==0)
-            printf("F\n");
+
+        line l1,l2;
+        point p;
+        l1.scan();
+        l2.scan();
+        p=l1.intersectionPoint(l2);
+        //printf("%f %f\n",p.x,p.y);
+        if(p.x==2000.0 && p.y==2000.0)
+            printf("NONE\n");
+        else if(p.x==3000.0 && p.y==3000.0)
+            printf("LINE\n");
         else
-            printf("T\n");
+            printf("POINT %0.2f %0.2f\n",p.x,p.y);
+
+
     }
+    printf("END OF OUTPUT\n");
 }
