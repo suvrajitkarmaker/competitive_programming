@@ -65,7 +65,7 @@ struct point
     {
         return x*p.x+y*p.y;
     }
-    D det(point p)
+    D cross(point p)
     {
         return x*p.y-y*p.x;
     }
@@ -81,6 +81,32 @@ struct point
     {
         return point(y,-x);
     }
+    D orient(point a, point b, point c)
+    {
+        // return cross(b-a,c-a);
+        return (b-a).cross(c-a);
+    }
+    D sq(point p)
+    {
+        return p.x*p.x + p.y*p.y;
+    }
+    D abs(point p)
+    {
+        return sqrt(sq(p));
+    }
+    D angle(point v, point w)
+    {
+        double cosTheta = v.dot(w) / abs(v) / abs(w);
+        return acos(max(-1.0, min(1.0, cosTheta)));
+    }
+    D orientedAngle(point a, point b, point c)
+    {
+        if (orient(a,b,c) >= 0)
+            return angle(b-a, c-a);
+        else
+            return 2*PI - angle(b-a, c-a);
+    }
+
 };
 
 struct line
@@ -109,11 +135,11 @@ struct line
     }
     bool isParallel(line v)
     {
-        return compare((b-a).det(v.b-v.a))==0;
+        return compare((b-a).cross(v.b-v.a))==0;
     }
     bool isColinear(line v)
     {
-        return compare((b-a).det(v.b-a))==0 && compare((b-a).det(v.a-a))==0;
+        return compare((b-a).cross(v.b-a))==0 && compare((b-a).cross(v.a-a))==0;
     }
     line perpendicLine(point p)
     {
@@ -121,8 +147,8 @@ struct line
     }
     point intersectionPoint(line v)
     {
-        D a1=(v.b-v.a).det(a-v.a);
-        D a2=(v.b-v.a).det(b-v.b);
+        D a1=(v.b-v.a).cross(a-v.a);
+        D a2=(v.b-v.a).cross(b-v.b);
         if(compare(a1)==compare(0) && compare(a2)==compare(0))//if a1=0 & a2=0 then they are same line
             return point(3000,3000); //it depends of problem constant
         if(compare(a1)==compare(a2)) //if a1==a2 same then they are not intersect
@@ -131,17 +157,17 @@ struct line
     }
     int isPointOnSeg(point p)
     {
-        return (compare((p-a).det(b-a))==0 && compare((p-a).dot(p-b))<=0);
+        return (compare((p-a).cross(b-a))==0 && compare((p-a).dot(p-b))<=0);
         //1 if it is on the segment otherwise 0
 
     }
     int doSegIntersectSeg(line v)
     {
 
-        int d1=compare((b-a).det(v.a-a));
-        int d2=compare((b-a).det(v.b-a));
-        int d3=compare((v.b-v.a).det(a-v.a));
-        int d4=compare((v.b-v.a).det(b-v.a));
+        int d1=compare((b-a).cross(v.a-a));
+        int d2=compare((b-a).cross(v.b-a));
+        int d3=compare((v.b-v.a).cross(a-v.a));
+        int d4=compare((v.b-v.a).cross(b-v.a));
         if((d1^d2)==-2 && (d3^d4)==-2)
             return 2;//intersects;
         if(!d1&&compare((v.a - a).dot(v.a - b))<=0) return 1; //intersect strictly inside
@@ -229,7 +255,7 @@ struct polygon
         for(int i=0; i<n; i++)
         {
             int j=(i+1)%n;
-            int k=compare((q-p[j]).det(p[i]-p[j]));
+            int k=compare((q-p[j]).cross(p[i]-p[j]));
             int u=compare(p[i].y-q.y);
             int v=compare(p[j].y-q.y);
             if(k>0 && u<0 && v>=0) cnt+=1;
