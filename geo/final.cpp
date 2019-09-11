@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 typedef double D;
+typedef long long int ll;
 const D EPS=1e-8;
 const D PI=acos(-1.0);
 const D INF = 1e20;
@@ -28,74 +29,24 @@ struct point
         x=p;
         y=q;
     }
-    void scan()
-    {
-        cin>>x>>y;
-    }
-    void print()
-    {
-        cout<<setprecision(3)<<fixed<<x<<" "<<y<<"\n";
-    }
-    bool operator <(point a) const
-    {
-        return compare(a.x-x)==0?compare(y-a.y)<0:x<a.x;
-    }
+    void scan() {cin>>x>>y;}
+    void print() {cout<<setprecision(3)<<fixed<<x<<" "<<y<<"\n";}
+    bool operator <(point a) const {return compare(a.x-x)==0?compare(y-a.y)<0:x<a.x;}
 
-    point operator + (point p)
-    {
-        return point(p.x+x,p.y+y);
-    }
-    point operator - (point p)
-    {
-        return point(x-p.x,y-p.y);
-    }
-    point operator * (D v)
-    {
-        return point(x*v,y*v);
-    }
-    point operator / (D v)
-    {
-        return point(x/v,y/v);
-    }
-    bool operator == (point p)
-    {
-        return (compare(x-p.x)==0 && compare(y-p.y)==0);
-    }
-    D dot(point p)
-    {
-        return x*p.x+y*p.y;
-    }
-    D cross(point p)
-    {
-        return x*p.y-y*p.x;
-    }
-    D distance(point p)
-    {
-        return hypot(x-p.x,y-p.y);
-    }
-    point rotateLeft()
-    {
-        return point(-y,x);
-    }
-    point rotateRight()
-    {
-        return point(y,-x);
-    }
-    D orient(point a, point b, point c)
-    {
-        // return cross(b-a,c-a);
-        return (b-a).cross(c-a);
-    }
-    D sq(point p)
-    {
-        return p.x*p.x + p.y*p.y;
-    }
-    D abs(point p)
-    {
-        return sqrt(sq(p));
-    }
-    D angle(point v, point w)
-    {
+    point operator + (point p) {return point(p.x+x,p.y+y);}
+    point operator - (point p) {return point(x-p.x,y-p.y);}
+    point operator * (D v) {return point(x*v,y*v);}
+    point operator / (D v) {return point(x/v,y/v);}
+    bool operator == (point p) {return (compare(x-p.x)==0 && compare(y-p.y)==0);}
+    D dot(point p) {return x*p.x+y*p.y;}
+    D cross(point p) {return x*p.y-y*p.x;}
+    D distance(point p) {return hypot(x-p.x,y-p.y);}
+    point rotateLeft() {return point(-y,x);}
+    point rotateRight() {return point(y,-x);}
+    D orient(point a, point b, point c) {return (b-a).cross(c-a);}
+    D sq(point p) {return p.x*p.x + p.y*p.y;}
+    D abs(point p) {return sqrt(sq(p));}
+    D angle(point v, point w) {
         double cosTheta = v.dot(w) / abs(v) / abs(w);
         return acos(max(-1.0, min(1.0, cosTheta)));
     }
@@ -122,40 +73,26 @@ struct line
 {
 
     point a,b;
-    line()
-    {
+    line(){
         a=point(0,0);
         b=point(0,0);
     }
-    line(point p,point q)
-    {
+    line(point p,point q) {
         a=p;
         b=q;
     }
-    void scan()
-    {
+    void scan(){
         a.scan();
         b.scan();
     }
-    void printf()
-    {
+    void printf(){
         a.print();
         b.print();
     }
-    bool isParallel(line v)
-    {
-        return compare((b-a).cross(v.b-v.a))==0;
-    }
-    bool isColinear(line v)
-    {
-        return compare((b-a).cross(v.b-a))==0 && compare((b-a).cross(v.a-a))==0;
-    }
-    line perpendicLine(point p)
-    {
-        return line(p,p+(b-a).rotateLeft());
-    }
-    point intersectionPoint(line v)
-    {
+    bool isParallel(line v){return compare((b-a).cross(v.b-v.a))==0;}
+    bool isColinear(line v) {return compare((b-a).cross(v.b-a))==0 && compare((b-a).cross(v.a-a))==0;}
+    line perpendicLine(point p) {return line(p,p+(b-a).rotateLeft());}
+    point intersectionPoint(line v){
         D a1=(v.b-v.a).cross(a-v.a);
         D a2=(v.b-v.a).cross(b-v.b);
         if(compare(a1)==compare(0) && compare(a2)==compare(0))//if a1=0 & a2=0 then they are same line
@@ -164,12 +101,8 @@ struct line
             return point(2000,2000); //it depends of problem constant
         return point((a.x*a2 - b.x*a1)/(a2-a1), (a.y*a2 - b.y*a1)/(a2-a1));
     }
-    int isPointOnSeg(point p)
-    {
-        return (compare((p-a).cross(b-a))==0 && compare((p-a).dot(p-b))<=0);
-        //1 if it is on the segment otherwise 0
+    int isPointOnSeg(point p) {return (compare((p-a).cross(b-a))==0 && compare((p-a).dot(p-b))<=0);}
 
-    }
     int doSegIntersectSeg(line v)
     {
 
@@ -314,8 +247,9 @@ struct polygon
     }
 };
 vector<point> hull;
-void convexHull(point points[], int n)
+void convexHull_nq(point points[], int n)
 {
+    hull.clear();
     if (n < 3)
         return;
 
@@ -342,28 +276,58 @@ void convexHull(point points[], int n)
     }
 
 }
+//////////////////////convexhulllognstart/////////////////////
+double abs(point p)
+{
+    return sqrt(pt.sq(p));
+}
+bool isPivot(point &A,point &B)
+{
+    if(abs(A.x-B.x)>EPS)
+        return A.x<B.x;
+    return A.y<B.y;
+}
+point piv;
+bool polarSort(point &A,point &B)
+{
+    D area=pt.orient(piv, A, B);
+    if(abs(area)<EPS)
+        return pt.sq(A-piv)<pt.sq(B-piv);
+    return area>0;
+}
+void convexHull_logn(vector<point>& v)
+{
+    hull.clear();
+    int n=v.size();
+    if(!n)
+        return;
+    int pivot=0;
+    for(int i=1; i<n; i++)
+    {
+        if(isPivot(v[i],v[pivot]))
+            pivot=i;
+    }
+    swap(v[0],v[pivot]);
+    piv=v[0];
+    pivot=0;
+    sort(v.begin()+1,v.end(),polarSort);
+    if(n<3)
+    {
+        hull=v;
+        return;
+    }
+    hull.push_back(v[0]);
+    hull.push_back(v[1]);
+    for(int i=2; i<n; i++)
+    {
+        while(hull.size()>=2 && pt.orient(hull[hull.size()-2],hull.back(),v[i])<=0)
+            hull.pop_back();
+        hull.push_back(v[i]);
+    }
+}
+/////////////////////convexhulllognend////////////////////
 int main()
 {
-    int te;
-    cin>>te;
-    printf("INTERSECTING LINES OUTPUT\n");
-    while(te--)
-    {
 
-        line l1,l2;
-        point p;
-        l1.scan();
-        l2.scan();
-        p=l1.intersectionPoint(l2);
-        //printf("%f %f\n",p.x,p.y);
-        if(p.x==2000.0 && p.y==2000.0)
-            printf("NONE\n");
-        else if(p.x==3000.0 && p.y==3000.0)
-            printf("LINE\n");
-        else
-            printf("POINT %0.2f %0.2f\n",p.x,p.y);
-
-
-    }
-    printf("END OF OUTPUT\n");
+    return 0;
 }
