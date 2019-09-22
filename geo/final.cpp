@@ -245,7 +245,16 @@ struct polygon
         return 2;//intersection on the side
 
     }
-};
+    double areaPolygon(vector<point>p)
+    {
+        double area=0.0;
+        for(int i=0,n=p.size(); i<n; i++)
+        {
+            area+=p[i].cross(p[(i+1)%n]);
+        }
+        return abs(area)/2.0;
+    }
+}poly;
 vector<point> hull;
 void convexHull_nq(point points[], int n)
 {
