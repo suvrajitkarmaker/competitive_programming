@@ -1,39 +1,83 @@
 #include <bits/stdc++.h>
 using namespace std;
-unordered_map<string,int>mp;
+struct node
+{
+    bool endmark;
+    node* next[10 + 1];
+    node()
+    {
+        endmark = false;
+        for (int i = 0; i < 10; i++)
+            next[i] = NULL;
+    }
+}*root;
+void insert(char* str, int len)
+{
+    node* curr = root;
+    for (int i = 0; i < len; i++)
+    {
+        int id = str[i] - '0';
+        if (curr->next[id] == NULL)
+            curr->next[id] = new node();
+        curr = curr->next[id];
+    }
+    curr->endmark = true;
+}
+bool search(string &str, int len)
+{
+    node* curr = root;
+    for (int i = 0; i < len; i++)
+    {
+        int id = str[i] - '0';
+        if (curr->next[id] == NULL)
+            return false;
+        curr = curr->next[id];
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        if (curr->next[i] != NULL)
+            return true;
+    }
+    return false;
+}
+void del(node* cur)
+{
+    for (int i = 0; i < 10; i++)
+        if (cur->next[i])
+            del(cur->next[i]);
+    delete(cur);
+}
+vector<string>v;
 int main()
 {
-    int t,n;
-    scanf("%d",&t);
-    for(int i=0;i<t;i++)
+
+    int te,n,f;
+    scanf("%d",&te);
+    char s[100];
+    for(int i=0; i<te; i++)
     {
         scanf("%d",&n);
-        char s[n][100];
-        for(int j=0;j<n;j++)
+        v.clear();
+        root = new node();
+        for(int j=0; j<n; j++)
         {
-            scanf("%s",s[j]);
-            mp[s[j]]=1;
+            scanf("%s",s);
+            v.push_back(s);
+            insert(s,strlen(s));
         }
-        int c1=0;
-        for(int j=0;j<n;j++)
+        f=0;
+        for(int j=0; j<n; j++)
         {
-            int l=strlen(s[j]);
-            string tm;
-            for(int k=0;k<l;k++)
+            if(search(v[j],v[j].size()))
             {
-                tm+=s[j][k];
-                if(mp[tm]==1 && k<l-1)
-                {
-                    c1=1;
-                    break;
-                }
+                f=1;
+                break;
             }
-            tm.clear();
         }
-        if(c1==0)
+        if(f==0)
             printf("YES\n");
         else
             printf("NO\n");
-        mp.clear();
+        del(root);
     }
 }
